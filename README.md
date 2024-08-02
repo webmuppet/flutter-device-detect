@@ -1,4 +1,4 @@
-# device_info_web
+# Flutter Device Detect
 
 A new Flutter project.
 
