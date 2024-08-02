@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart'; // Needed for kIsWeb
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -29,7 +31,20 @@ class _MyAppState extends State<MyApp> {
 
     try {
       if (kIsWeb) {
-        deviceData = _readWebBrowserInfo(await deviceInfoPlugin.webBrowserInfo);
+        var webBrowserInfo = await deviceInfoPlugin.webBrowserInfo;
+        if (_isMobileBrowser(webBrowserInfo.userAgent)) {
+          if (Platform.isAndroid) {
+            deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+          } else if (Platform.isIOS) {
+            deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
+          }
+        } else {
+          deviceData = _readWebBrowserInfo(webBrowserInfo);
+        }
+      } else if (Platform.isAndroid) {
+        deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+      } else if (Platform.isIOS) {
+        deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
       }
     } catch (e) {
       deviceData = {'Error:': 'Failed to get device info'};
@@ -47,6 +62,11 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  bool _isMobileBrowser(String? userAgent) {
+    if (userAgent == null) return false;
+    return userAgent.contains('Mobi');
+  }
+
   Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
     return <String, dynamic>{
       'Browser Name': describeEnum(data.browserName),
@@ -60,6 +80,54 @@ class _MyAppState extends State<MyApp> {
       'Product Sub': data.productSub,
       'Vendor': data.vendor,
       'Vendor Sub': data.vendorSub,
+    };
+  }
+
+  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
+    return <String, dynamic>{
+      'version.securityPatch': build.version.securityPatch,
+      'version.sdkInt': build.version.sdkInt,
+      'version.release': build.version.release,
+      'version.previewSdkInt': build.version.previewSdkInt,
+      'version.incremental': build.version.incremental,
+      'version.codename': build.version.codename,
+      'version.baseOS': build.version.baseOS,
+      'board': build.board,
+      'bootloader': build.bootloader,
+      'brand': build.brand,
+      'device': build.device,
+      'display': build.display,
+      'fingerprint': build.fingerprint,
+      'hardware': build.hardware,
+      'host': build.host,
+      'id': build.id,
+      'manufacturer': build.manufacturer,
+      'model': build.model,
+      'product': build.product,
+      'supported32BitAbis': build.supported32BitAbis,
+      'supported64BitAbis': build.supported64BitAbis,
+      'supportedAbis': build.supportedAbis,
+      'tags': build.tags,
+      'type': build.type,
+      'isPhysicalDevice': build.isPhysicalDevice,
+      'systemFeatures': build.systemFeatures,
+    };
+  }
+
+  Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
+    return <String, dynamic>{
+      'name': data.name,
+      'systemName': data.systemName,
+      'systemVersion': data.systemVersion,
+      'model': data.model,
+      'localizedModel': data.localizedModel,
+      'identifierForVendor': data.identifierForVendor,
+      'isPhysicalDevice': data.isPhysicalDevice,
+      'utsname.sysname:': data.utsname.sysname,
+      'utsname.nodename:': data.utsname.nodename,
+      'utsname.release:': data.utsname.release,
+      'utsname.version:': data.utsname.version,
+      'utsname.machine:': data.utsname.machine,
     };
   }
 
@@ -105,76 +173,64 @@ class _MyAppState extends State<MyApp> {
 
   List<Widget> _buildDeviceInfoWidgets() {
     return _deviceData.keys.map((String property) {
-      return Row(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Wrap(
+          children: <Widget>[
+            Text(
               property,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                '${_deviceData[property]}',
-                overflow: TextOverflow.ellipsis,
-              ),
+            SizedBox(width: 10),
+            Text(
+              '${_deviceData[property]}',
+              overflow: TextOverflow.visible,
             ),
-          ),
-        ],
+          ],
+        ),
       );
     }).toList()
-      ..add(Row(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
+      ..add(Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Wrap(
+          children: <Widget>[
+            Text(
               'Total Disk Space',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                _totalSpace != null
-                    ? '${_totalSpace! / (1024 * 1024 * 1024)} GB'
-                    : 'Unavailable',
-                overflow: TextOverflow.ellipsis,
-              ),
+            SizedBox(width: 10),
+            Text(
+              _totalSpace != null
+                  ? '${_totalSpace! / (1024 * 1024 * 1024)} GB'
+                  : 'Unavailable',
+              overflow: TextOverflow.visible,
             ),
-          ),
-        ],
+          ],
+        ),
       ))
-      ..add(Row(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
+      ..add(Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Wrap(
+          children: <Widget>[
+            Text(
               'Free Disk Space',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                _freeSpace != null
-                    ? '${_freeSpace! / (1024 * 1024 * 1024)} GB'
-                    : 'Unavailable',
-                overflow: TextOverflow.ellipsis,
-              ),
+            SizedBox(width: 10),
+            Text(
+              _freeSpace != null
+                  ? '${_freeSpace! / (1024 * 1024 * 1024)} GB'
+                  : 'Unavailable',
+              overflow: TextOverflow.visible,
             ),
-          ),
-        ],
+          ],
+        ),
       ));
   }
 }
