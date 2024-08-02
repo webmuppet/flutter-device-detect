@@ -138,26 +138,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('Device Info'),
         ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth > 600) {
-              return _buildWideContainers();
-            } else {
-              return _buildNormalContainers();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWideContainers() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        childAspectRatio: 3,
-        children: _buildDeviceInfoWidgets(),
+        body: _buildNormalContainers(),
       ),
     );
   }
@@ -205,7 +186,7 @@ class _MyAppState extends State<MyApp> {
             SizedBox(width: 10),
             Text(
               _totalSpace != null
-                  ? '${_totalSpace! / (1024 * 1024 * 1024)} GB'
+                  ? '${_totalSpace! / 1024} GB'
                   : 'Unavailable',
               overflow: TextOverflow.visible,
             ),
@@ -225,7 +206,7 @@ class _MyAppState extends State<MyApp> {
             SizedBox(width: 10),
             Text(
               _freeSpace != null
-                  ? '${_freeSpace! / (1024 * 1024 * 1024)} GB'
+                  ? '${_freeSpace! / 1024} GB'
                   : 'Unavailable',
               overflow: TextOverflow.visible,
             ),

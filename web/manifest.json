@@ -1,6 +1,6 @@
 {
-    "name": "device_info_web",
-    "short_name": "device_info_web",
+    "name": "flutter_device_detect",
+    "short_name": "flutter_device_detect",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
