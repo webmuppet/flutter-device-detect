@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "713912149150",
+    "project_id": "device-detect-b1e4a",
+    "storage_bucket": "device-detect-b1e4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713912149150:android:02cfb38b87b8ff2c84878f",
+        "android_client_info": {
+          "package_name": "com.gravity.devicedetect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzxN15Qzgk5h7Mkd_v2H7KNUrZNlHgM7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

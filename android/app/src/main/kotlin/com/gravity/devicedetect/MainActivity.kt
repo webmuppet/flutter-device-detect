@@ -1,4 +1,4 @@
-package com.example.device_info_web
+package com.gravity.devicedetect
 
 import io.flutter.embedding.android.FlutterActivity
 

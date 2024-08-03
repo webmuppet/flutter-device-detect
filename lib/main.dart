@@ -69,17 +69,21 @@ class _MyAppState extends State<MyApp> {
 
   Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
     return <String, dynamic>{
-      'Browser Name': describeEnum(data.browserName),
-      'User Agent': data.userAgent,
-      'App Code Name': data.appCodeName,
-      'App Name': data.appName,
-      'App Version': data.appVersion,
-      'Language': data.language,
-      'Platform': data.platform,
-      'Product': data.product,
-      'Product Sub': data.productSub,
-      'Vendor': data.vendor,
-      'Vendor Sub': data.vendorSub,
+      'browserName': data.browserName.name,
+      'appCodeName': data.appCodeName,
+      'appName': data.appName,
+      'appVersion': data.appVersion,
+      'deviceMemory': data.deviceMemory,
+      'language': data.language,
+      'languages': data.languages,
+      'platform': data.platform,
+      'product': data.product,
+      'productSub': data.productSub,
+      'userAgent': data.userAgent,
+      'vendor': data.vendor,
+      'vendorSub': data.vendorSub,
+      'hardwareConcurrency': data.hardwareConcurrency,
+      'maxTouchPoints': data.maxTouchPoints,
     };
   }
 
@@ -111,6 +115,8 @@ class _MyAppState extends State<MyApp> {
       'type': build.type,
       'isPhysicalDevice': build.isPhysicalDevice,
       'systemFeatures': build.systemFeatures,
+      'serialNumber': build.serialNumber,
+      'isLowRamDevice': build.isLowRamDevice,
     };
   }
 
@@ -136,7 +142,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Device Info'),
+          title: const Text('Device Info'),
         ),
         body: _buildNormalContainers(),
       ),
